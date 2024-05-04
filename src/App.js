@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [value, setValue] = useState('');
+  const [submittedValues, setSubmittedValues] = useState([]);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/values', { value });
+
+      setSubmittedValues([...submittedValues, response.data.value]);
+      setValue('');
+      setError(null);
+    } catch (error) {
+      setError('Error storing value: ' + error.message);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Submit a Value</h1>
+      <input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
+      <button onClick={handleSubmit}>Submit</button>
+      
+      {error && <p>{error}</p>}
+      
+      <h2>Submitted Values</h2>
+      <ul>
+        {submittedValues.map((value, index) => (
+          <li key={index}>{value}</li>
+        ))}
+      </ul>
     </div>
   );
 }
 
 export default App;
+
