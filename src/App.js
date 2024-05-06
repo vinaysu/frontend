@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
   const [value, setValue] = useState('');
   const [submittedValues, setSubmittedValues] = useState([]);
   const [error, setError] = useState(null);
+
+  // Fetch submitted values from the server on component mount
+  useEffect(() => {
+    const fetchSubmittedValues = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/values');
+        // Extracting the 'value' property from each object in the response data array
+        const values = response.data.map(item => item.value);
+        setSubmittedValues(values);
+        setError(null);
+      } catch (error) {
+        setError('Error fetching values: ' + error.message);
+      }
+    };
+  
+    fetchSubmittedValues();
+  }, []);
+  
 
   const handleSubmit = async () => {
     try {
