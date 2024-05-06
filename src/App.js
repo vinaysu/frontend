@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const fetchSubmittedValues = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/values');
+        const response = await axios.get('https://backend-08cl.onrender.com/api/values');
         // Extracting the 'value' property from each object in the response data array
         const values = response.data.map(item => item.value);
         setSubmittedValues(values);
@@ -19,14 +19,14 @@ function App() {
         setError('Error fetching values: ' + error.message);
       }
     };
-  
+
     fetchSubmittedValues();
   }, []);
-  
+
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/values', { value });
+      const response = await axios.post('https://backend-08cl.onrender.com/api/values', { value });
 
       setSubmittedValues([...submittedValues, response.data.value]);
       setValue('');
@@ -41,9 +41,9 @@ function App() {
       <h1>Submit a Value</h1>
       <input type="text" value={value} onChange={(e) => setValue(e.target.value)} />
       <button onClick={handleSubmit}>Submit</button>
-      
+
       {error && <p>{error}</p>}
-      
+
       <h2>Submitted Values</h2>
       <ul>
         {submittedValues.map((value, index) => (
